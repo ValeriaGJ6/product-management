@@ -8,6 +8,7 @@ obj/
 *.dbmdl
 *.bak
 .vs/
+appsettings.Development.json
 
 # --- Angular / Node ---
 node_modules/
