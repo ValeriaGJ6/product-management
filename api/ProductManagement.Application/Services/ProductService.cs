@@ -1,4 +1,8 @@
-﻿using ProductManagement.Domain.Interfaces;
+﻿using ProductManagement.Application.Common;
+using ProductManagement.Application.DTOs.Requests.Product;
+using ProductManagement.Application.DTOs.Responses.Product;
+using ProductManagement.Domain.Interfaces;
+using ProductManagement.Infrastructure.Entities;
 
 namespace ProductManagement.Application.Services
 {
@@ -9,6 +13,94 @@ namespace ProductManagement.Application.Services
         public ProductService(IProductRepository productRepository)
         {
             _productRepository = productRepository;
+        }
+
+        public async Task<PagedList<ProductResponseDTO>> GetPagedProductsAsync(int page, int pageSize)
+        {
+            var totalCount = await _productRepository.GetTotalCountAsync();
+
+            var products = totalCount > 0
+                ? await _productRepository.GetAllAsync(page, pageSize)
+                : new List<Product>();
+
+            var productDtos = products.Select(p => new ProductResponseDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                CreateAt = p.CreateAt
+            });
+
+            return new PagedList<ProductResponseDTO>
+            {
+                Items = productDtos,
+                TotalCount = totalCount,
+                PageSize = pageSize,
+                CurrentPage = page
+            };
+        }
+
+        public async Task<ProductResponseDTO> GetProductById(int id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+            if (product == null)
+            {
+                throw new KeyNotFoundException("Product not found");
+            }
+            return new ProductResponseDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                CreateAt = product.CreateAt
+            };
+        }
+
+        public async Task<ProductResponseDTO> CreateProductAsync(CreateProductRequestDTO dto)
+        {
+            var product = new Product
+            {
+                Name = dto.Name!,
+                Description = dto.Description,
+                Price = dto.Price!.Value,
+                CreateAt = DateTime.Now,
+            };
+
+            await _productRepository.AddAsync(product);
+
+            return new ProductResponseDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                CreateAt = product.CreateAt
+            };
+        }
+
+        public async Task<ProductResponseDTO> UpdateProductAsync(int id, UpdateProductRequestDTO product)
+        {
+            var existingProduct = await _productRepository.GetByIdAsync(id);
+            existingProduct.Name = product.Name!;
+            existingProduct.Description = product.Description;
+            existingProduct.Price = product.Price!.Value;
+            await _productRepository.UpdateAsync(existingProduct);
+            return new ProductResponseDTO
+            {
+                Id = existingProduct.Id,
+                Name = existingProduct.Name,
+                Description = existingProduct.Description,
+                Price = existingProduct.Price,
+                CreateAt = existingProduct.CreateAt
+            };
+        }
+
+        public async Task DeleteProductAsync(int id)
+        {
+            var existingProduct = await _productRepository.GetByIdAsync(id);
+            await _productRepository.DeleteAsync(existingProduct);
         }
     }
 }

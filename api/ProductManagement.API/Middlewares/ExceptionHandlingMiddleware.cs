@@ -31,14 +31,27 @@ namespace ProductManagement.API.Middlewares
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            // Asigna el status code basado en el tipo de excepción
+            var statusCode = exception switch
+            {
+                KeyNotFoundException => (int)HttpStatusCode.NotFound,
+                FluentValidation.ValidationException => (int)HttpStatusCode.BadRequest,
+                _ => (int)HttpStatusCode.InternalServerError
+            };
+
+            context.Response.StatusCode = statusCode;
 
             var errorDetails = new
             {
-                title = "Error interno del servidor.",
+                title = statusCode == (int)HttpStatusCode.InternalServerError
+                    ? "Internal Server Error."
+                    : "One or more validation errors occurred.",
                 status = context.Response.StatusCode,
-                message = "Ocurrió un error inesperado. Intente nuevamente.",
-                detail = _env.IsDevelopment() ? exception.Message : null
+                message = statusCode == (int)HttpStatusCode.InternalServerError
+                    ? "An unexpected error occurred. Please try again."
+                    : exception.Message,
+                detail = _env.IsDevelopment() ? exception.StackTrace : null
             };
 
             await context.Response.WriteAsJsonAsync(errorDetails);

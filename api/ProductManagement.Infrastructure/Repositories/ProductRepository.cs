@@ -22,6 +22,11 @@ namespace ProductManagement.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<int> GetTotalCountAsync()
+        {
+            return await _context.Products.CountAsync();
+        }
+
         public async Task<Product?> GetByIdAsync(int id)
         {
             return await _context.Products.FindAsync(id);

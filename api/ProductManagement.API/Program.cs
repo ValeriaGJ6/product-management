@@ -1,6 +1,12 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using ProductManagement.API.Middlewares.Extensions;
+using ProductManagement.Application.Services;
+using ProductManagement.Application.Validators.Product;
+using ProductManagement.Domain.Interfaces;
 using ProductManagement.Infrastructure.Data;
+using ProductManagement.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +33,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductRequestDTOValidator>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -39,6 +52,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseExceptionHandlingMiddleware();
 app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();
