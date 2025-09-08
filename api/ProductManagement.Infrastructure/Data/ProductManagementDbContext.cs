@@ -22,7 +22,7 @@ public partial class ProductManagementDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.CreateAt)
+            entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(255);

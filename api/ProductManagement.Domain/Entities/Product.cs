@@ -10,5 +10,5 @@ public partial class Product
 
     public decimal Price { get; set; }
 
-    public DateTime CreateAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

@@ -29,7 +29,7 @@ namespace ProductManagement.Application.Services
                 Name = p.Name,
                 Description = p.Description,
                 Price = p.Price,
-                CreateAt = p.CreateAt
+                CreatedAt = p.CreatedAt
             });
 
             return new PagedList<ProductResponseDTO>
@@ -46,7 +46,7 @@ namespace ProductManagement.Application.Services
             var product = await _productRepository.GetByIdAsync(id);
             if (product == null)
             {
-                throw new KeyNotFoundException("Product not found");
+                throw new KeyNotFoundException("No se encontró el producto solicitado.");
             }
             return new ProductResponseDTO
             {
@@ -54,7 +54,7 @@ namespace ProductManagement.Application.Services
                 Name = product.Name,
                 Description = product.Description,
                 Price = product.Price,
-                CreateAt = product.CreateAt
+                CreatedAt = product.CreatedAt
             };
         }
 
@@ -65,7 +65,7 @@ namespace ProductManagement.Application.Services
                 Name = dto.Name!,
                 Description = dto.Description,
                 Price = dto.Price!.Value,
-                CreateAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
             };
 
             await _productRepository.AddAsync(product);
@@ -76,7 +76,7 @@ namespace ProductManagement.Application.Services
                 Name = product.Name,
                 Description = product.Description,
                 Price = product.Price,
-                CreateAt = product.CreateAt
+                CreatedAt = product.CreatedAt
             };
         }
 
@@ -97,7 +97,7 @@ namespace ProductManagement.Application.Services
                 Name = existingProduct.Name,
                 Description = existingProduct.Description,
                 Price = existingProduct.Price,
-                CreateAt = existingProduct.CreateAt
+                CreatedAt = existingProduct.CreatedAt
             };
         }
 
