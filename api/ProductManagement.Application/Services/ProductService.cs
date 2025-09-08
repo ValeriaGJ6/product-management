@@ -83,6 +83,10 @@ namespace ProductManagement.Application.Services
         public async Task<ProductResponseDTO> UpdateProductAsync(int id, UpdateProductRequestDTO product)
         {
             var existingProduct = await _productRepository.GetByIdAsync(id);
+            if (existingProduct == null)
+            {
+                throw new KeyNotFoundException("No se encontró el producto solicitado.");
+            }
             existingProduct.Name = product.Name!;
             existingProduct.Description = product.Description;
             existingProduct.Price = product.Price!.Value;
@@ -100,6 +104,10 @@ namespace ProductManagement.Application.Services
         public async Task DeleteProductAsync(int id)
         {
             var existingProduct = await _productRepository.GetByIdAsync(id);
+            if (existingProduct == null)
+            {
+                throw new KeyNotFoundException("No se encontró el producto solicitado.");
+            }
             await _productRepository.DeleteAsync(existingProduct);
         }
     }
