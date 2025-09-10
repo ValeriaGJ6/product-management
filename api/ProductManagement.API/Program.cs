@@ -36,6 +36,16 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductRequestDTOValidator>();
@@ -55,5 +65,6 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandlingMiddleware();
 app.UseHttpsRedirection();
 app.MapControllers();
+app.UseCors();
 
 app.Run();

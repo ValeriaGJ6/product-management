@@ -54,6 +54,14 @@ namespace ProductManagement.API.Controllers
             return Ok(pagedList);
         }
 
+        // GET - api/products/5
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ProductResponseDTO>> GetProductById(int id)
+        {
+            var product = await _productService.GetProductById(id);
+            return Ok(product);
+        }
+
         // CREATE POST api/products
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductRequestDTO product)
