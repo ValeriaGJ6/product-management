@@ -1,0 +1,49 @@
+@ProductManagement.API_HostAddress = http://localhost:5200
+
+### GET paginated products
+GET {{ProductManagement.API_HostAddress}}/api/products?page=1&pageSize=20
+Accept: application/json
+
+### POST create product with error
+POST {{ProductManagement.API_HostAddress}}/api/products
+Content-Type: application/json
+{
+  "name": "",
+  "description": "Micrófono Condensador Maono Con Cancelación De Ruido Y Soporte De Brazo Rgb Dgm20s Cardioide Para PC Y Celular Color Negro",
+  "price": 150000.569
+}
+
+### POST create product without error
+POST {{ProductManagement.API_HostAddress}}/api/products
+Content-Type: application/json
+{
+  "name": "Micrófono Condensador Maono",
+  "description": "Micrófono Condensador Maono Con Cancelación De Ruido Y Soporte De Brazo Rgb Dgm20s Cardioide Para PC Y Celular Color Negro",
+  "price": 205000
+}
+
+### PUT update product with error
+PUT {{ProductManagement.API_HostAddress}}/api/products/32
+Content-Type: application/json
+{
+  "name": null,
+  "description": "",
+  "price": 205000.999
+}
+
+### PUT update product without error
+PUT {{ProductManagement.API_HostAddress}}/api/products/31
+Content-Type: application/json
+{
+  "name": "Micrófono",
+  "description": "",
+  "price": 205000
+}
+
+### DELETE delete product
+DELETE {{ProductManagement.API_HostAddress}}/api/products/31
+Content-Type: application/json
+
+### DELETE delete product
+DELETE {{ProductManagement.API_HostAddress}}/api/products/31
+Content-Type: application/json
