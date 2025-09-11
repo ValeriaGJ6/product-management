@@ -1,1 +1,130 @@
-<p>product-form works!</p>
+<div class="product-form-container">
+    <mat-card class="form-card">
+        <mat-card-header>
+            <mat-card-title>
+                @if (isEditMode()) {
+                    <mat-icon>edit</mat-icon>
+                    Edit Product
+                } @else {
+                    <mat-icon>add</mat-icon>
+                    Create New Product
+                }
+            </mat-card-title>
+            <mat-card-subtitle>
+                @if (isEditMode()) {
+                    Update the product information below
+                } @else {
+                    Fill in the product details to create a new item
+                }
+            </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            @if (isLoading()) {
+                <div class="loading-container">
+                    <mat-spinner diameter="40"></mat-spinner>
+                    <p>
+                        @if (isEditMode()) {
+                            Loading product data...
+                        } @else {
+                            Saving product...
+                        }
+                    </p>
+                </div>
+            } @else {
+                <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Product Name</mat-label>
+                        <input matInput 
+                               formControlName="name" 
+                               placeholder="Enter product name"
+                               maxlength="100">
+                        <mat-icon matSuffix>label</mat-icon>
+                        @if (productForm.get('name')?.invalid && productForm.get('name')?.dirty) {
+                            <mat-error>
+                                @if (productForm.get('name')?.hasError('required')) {
+                                    <span>Name is required</span>
+                                } @else if (productForm.get('name')?.hasError('minlength')) {
+                                    <span>Name must be at least {{ productForm.get('name')?.errors?.['minlength'].requiredLength }} characters</span>
+                                } @else if (productForm.get('name')?.hasError('maxlength')) {
+                                    <span>Name must not exceed {{ productForm.get('name')?.errors?.['maxlength'].requiredLength }} characters</span>
+                                }
+                            </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput 
+                                  formControlName="description"
+                                  placeholder="Enter product description"
+                                  rows="4"
+                                  maxlength="500"></textarea>
+                        <mat-icon matSuffix>description</mat-icon>
+                        @if (productForm.get('description')?.invalid && productForm.get('description')?.dirty) {
+                            <mat-error>
+                                @if (productForm.get('description')?.hasError('maxlength')) {
+                                    <span>Description must not exceed {{ productForm.get('description')?.errors?.['maxlength'].requiredLength }} characters</span>
+                                }
+                            </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Price</mat-label>
+                        <input matInput 
+                               type="number" 
+                               formControlName="price"
+                               placeholder="0.00"
+                               min="0.01"
+                               max="99999999.99"
+                               step="0.01">
+                        <span matTextPrefix>$ &nbsp;</span>
+                        <mat-icon matSuffix>attach_money</mat-icon>
+                        @if (productForm.get('price')?.invalid && productForm.get('price')?.dirty) {
+                            <mat-error>
+                                @if (productForm.get('price')?.hasError('required')) {
+                                    <span>Price is required</span>
+                                } @else if (productForm.get('price')?.hasError('min')) {
+                                    <span>Price must be greater than {{ productForm.get('price')?.errors?.['min'].min }}</span>
+                                } @else if (productForm.get('price')?.hasError('max')) {
+                                    <span>Price must not exceed {{ productForm.get('price')?.errors?.['max'].max }}</span>
+                                } @else if (productForm.get('price')?.hasError('pattern')) {
+                                    <span>Price must be a valid number with up to 2 decimal places</span>
+                                }
+                            </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <div class="form-actions">
+                        <button mat-button 
+                                type="button" 
+                                (click)="onCancel()"
+                                [disabled]="isLoading()">
+                            <mat-icon>cancel</mat-icon>
+                            Cancel
+                        </button>
+                        
+                        <button mat-raised-button 
+                                color="primary" 
+                                type="submit"
+                                [disabled]="productForm.invalid || isLoading()">
+                            <mat-icon>
+                                @if (isEditMode()) {
+                                    save
+                                } @else {
+                                    add
+                                }
+                            </mat-icon>
+                            @if (isEditMode()) {
+                                Update Product
+                            } @else {
+                                Create Product
+                            }
+                        </button>
+                    </div>
+                </form>
+            }
+        </mat-card-content>
+    </mat-card>
+</div>

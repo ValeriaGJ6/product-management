@@ -17,6 +17,11 @@ export class ProductService {
     return this.http.get<PagedList<Product>>(`${this.baseUrl}?page=${page}&pageSize=${pageSize}`);
   }
 
+  // GET /api/products/{id} - Get by ID
+  getById(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.baseUrl}/${id}`);
+  }
+
   // POST /api/products - Create
   createProduct(product: ProductCreateDto): Observable<Product> {
     return this.http.post<Product>(this.baseUrl, product);
