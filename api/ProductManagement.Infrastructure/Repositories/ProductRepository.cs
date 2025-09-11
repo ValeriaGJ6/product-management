@@ -17,6 +17,7 @@ namespace ProductManagement.Infrastructure.Repositories
         public async Task<IEnumerable<Product>> GetAllAsync(int page, int pageSize)
         {
             return await _context.Products
+                .OrderByDescending(p => p.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
