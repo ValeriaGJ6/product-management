@@ -29,7 +29,7 @@ A complete full-stack product management system built with Angular 20 and .NET 9
 - Visual Studio Code or Visual Studio 2022
 
 ### **Frontend**
-- Node.js (v18 or higher)
+- Node.js (v20.19.0 or higher)
 - npm or yarn
 - Angular CLI (v20)
 
